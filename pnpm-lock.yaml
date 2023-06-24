@@ -67,6 +67,9 @@ devDependencies:
   '@nestjs/cli':
     specifier: ^9.0.0
     version: 9.0.0
+  '@nestjs/config':
+    specifier: ^3.0.0
+    version: 3.0.0(@nestjs/common@9.0.9)(reflect-metadata@0.1.13)
   '@nestjs/schematics':
     specifier: ^9.0.0
     version: 9.0.1(chokidar@3.5.3)(typescript@4.7.4)
@@ -924,6 +927,20 @@ packages:
       rxjs: 7.5.6
       tslib: 2.4.0
       uuid: 8.3.2
+
+  /@nestjs/config@3.0.0(@nestjs/common@9.0.9)(reflect-metadata@0.1.13):
+    resolution: {integrity: sha512-fzASk1Uv6AjdE6uA1na8zpqRCXAhRpcfgpCVv3SAKlgJ3VR3bEjcI4G17WHLgLBsmPzI1ofdkSI451WLD1F1Rw==}
+    peerDependencies:
+      '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
+      reflect-metadata: ^0.1.13
+    dependencies:
+      '@nestjs/common': 9.0.9(class-transformer@0.5.1)(class-validator@0.13.2)(reflect-metadata@0.1.13)(rxjs@7.5.6)
+      dotenv: 16.1.4
+      dotenv-expand: 10.0.0
+      lodash: 4.17.21
+      reflect-metadata: 0.1.13
+      uuid: 9.0.0
+    dev: true
 
   /@nestjs/core@9.0.9(@nestjs/common@9.0.9)(@nestjs/platform-express@9.0.9)(reflect-metadata@0.1.13)(rxjs@7.5.6):
     resolution: {integrity: sha512-wqr/Nqz6U4B2MqbzD6b6eRNgJeZB9FvUQsgHtsTA8g/77ONyLMJcANPoYQcxu39iWCbd4JlIkZ2vXbCeubJaeA==}
@@ -2369,6 +2386,16 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       esutils: 2.0.3
+    dev: true
+
+  /dotenv-expand@10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
+    dev: true
+
+  /dotenv@16.1.4:
+    resolution: {integrity: sha512-m55RtE8AsPeJBpOIFKihEmqUcoVncQIwo7x9U8ZwLEZw9ZpXboz2c+rvog+jUaJvVrZ5kBOeYQBX5+8Aa/OZQw==}
+    engines: {node: '>=12'}
     dev: true
 
   /dotenv@16.3.1:
@@ -5360,6 +5387,11 @@ packages:
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
+
+  /uuid@9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: true
 
   /v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
