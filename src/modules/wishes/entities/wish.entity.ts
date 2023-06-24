@@ -53,7 +53,4 @@ export class Wish extends BaseEntity {
 
   @OneToMany(() => Offer, (offer) => offer.item)
   offers: Offer[];
-
-  @ManyToOne(() => Wishlist, (wishlist) => wishlist.items)
-  wishlist: Wishlist;
 }
