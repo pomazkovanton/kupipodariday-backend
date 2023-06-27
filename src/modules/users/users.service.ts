@@ -22,18 +22,14 @@ export class UsersService {
     });
     const existEmail = await this.userRepository.findOne({ where: { email } });
 
-    if (existUsername || existEmail) return true;
-
-    return false;
+    if (existUsername || existEmail)
+      throw new BadRequestException(
+        'A user with this email or username is already registered',
+      );
   }
 
-  async create(dto: CreateUserDto) {
+  async save(dto: CreateUserDto) {
     const existUser = await this.existUser(dto.username, dto.email);
-
-    if (existUser)
-      throw new BadRequestException(
-        'Пользователь с таким email или username уже зарегистрирован',
-      );
 
     const { password, ...user } = await this.userRepository.save({
       username: dto.username,
@@ -43,5 +39,11 @@ export class UsersService {
       password: this.hashPassword(dto.password),
     });
     return user;
+  }
+
+  async findOne(searchIndex: string) {
+    return this.userRepository.findOne({
+      where: [{ email: searchIndex }, { username: searchIndex }],
+    });
   }
 }

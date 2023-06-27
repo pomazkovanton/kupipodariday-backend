@@ -1,5 +1,7 @@
 export const config = () => ({
   port: Number(process.env.PORT),
+  jwtSecret: process.env.JWT_SECRET,
+  jwtExp: process.env.JWT_EXP,
   database: {
     type: 'postgres',
     host: process.env.DB_HOST,
