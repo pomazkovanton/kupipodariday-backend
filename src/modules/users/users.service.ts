@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { genSaltSync, hashSync } from 'bcrypt';
 
 import { CreateUserDto } from './dto/create-users.dto';
 import { User } from './entities/user.entity';
 import { UpdateUsersDto } from './dto/update-users.dto';
+import { FindUserDto } from './dto/find-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -81,5 +82,25 @@ export class UsersService {
 
     await this.userRepository.update(id, dto);
     return this.findOneById(id);
+  }
+
+  async getWishes(username: string) {
+    const user = await this.findOne(username);
+    if (!user) throw new BadRequestException('User not found');
+    const { wishes } = await this.userRepository.findOne({
+      where: { username },
+      select: ['wishes'],
+      relations: ['wishes', 'wishes.owner', 'wishes.offers'],
+    });
+    return wishes;
+  }
+
+  find(dto: FindUserDto) {
+    return this.userRepository.find({
+      where: [
+        { username: Like(`%${dto.query}%`) },
+        { email: Like(`%${dto.query}%`) },
+      ],
+    });
   }
 }
