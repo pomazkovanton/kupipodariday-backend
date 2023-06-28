@@ -10,7 +10,6 @@ import {
 import { BaseEntity } from '../../../common/base-entity';
 import { User } from '../../users/entities/user.entity';
 import { Offer } from '../../../modules/offers/entities/offer.entity';
-import { Wishlist } from '../../../modules/wishlists/entities/wishlist.entity';
 
 @Entity()
 export class Wish extends BaseEntity {
@@ -33,7 +32,7 @@ export class Wish extends BaseEntity {
   @IsPositive()
   price: number;
 
-  @Column()
+  @Column({ default: 0 })
   @IsNumber({
     maxDecimalPlaces: 2,
   })
