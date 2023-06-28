@@ -4,17 +4,29 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
+  Request,
+  UseGuards,
+  Get,
+  Patch,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-users.dto';
 
+import { UsersService } from './users.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UpdateUsersDto } from './dto/update-users.dto';
+
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  @UsePipes(new ValidationPipe())
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.save(createUserDto);
+  @Get('me')
+  findOwn(@Request() { user }) {
+    return this.usersService.findOneById(user.id);
+  }
+
+  @Patch('me')
+  @UsePipes(new ValidationPipe({ skipMissingProperties: true }))
+  update(@Request() { user }, @Body() dto: UpdateUsersDto) {
+    return this.usersService.update(user.id, dto);
   }
 }
