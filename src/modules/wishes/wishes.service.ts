@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { CreateWishDto } from './dto/create-wish.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wish } from './entities/wish.entity';
 import { UsersService } from '../users/users.service';
+import { UpdateWishDto } from './dto/update-wish.dto';
 
 @Injectable()
 export class WishesService {
@@ -18,6 +19,64 @@ export class WishesService {
     return this.wishRepository.save({
       ...dto,
       owner: user,
+    });
+  }
+
+  findLast() {
+    return this.wishRepository.find({
+      order: { createdAt: 'DESC' },
+      take: 40,
+      relations: ['owner', 'offers'],
+    });
+  }
+
+  findTop() {
+    return this.wishRepository.find({
+      take: 20,
+      order: { copied: 'desc' },
+      relations: ['owner', 'offers'],
+    });
+  }
+
+  async findOne(id: number) {
+    const wish = await this.wishRepository.findOne({
+      where: { id },
+      relations: ['owner', 'offers'],
+    });
+    if (!wish) throw new BadRequestException('Wish not found');
+    return wish;
+  }
+
+  async update(wishId: number, dto: UpdateWishDto, user) {
+    const wish = await this.findOne(wishId);
+    if (user && wish.owner.id !== user.id) {
+      throw new BadRequestException('No gift found');
+    }
+    if (dto.price && wish.offers.length > 0)
+      throw new BadRequestException(
+        'It is not possible to change the value of the gift',
+      );
+    await this.wishRepository.update(wishId, dto);
+    return this.findOne(wishId);
+  }
+
+  async removeOne(wishId: number, user) {
+    const wish = await this.findOne(wishId);
+    if (user && wish.owner.id !== user.id) {
+      throw new BadRequestException('No gift found');
+    }
+    await this.wishRepository.delete(wishId);
+    return wish;
+  }
+
+  async copy(wishId: number, user) {
+    const { id, createdAt, updatedAt, copied, raised, offers, ...dataWish } =
+      await this.findOne(wishId);
+    const owner = await this.userService.findOneById(user.id);
+    await this.wishRepository.update(id, { copied: copied + 1 });
+    return this.wishRepository.save({
+      ...dataWish,
+      owner,
     });
   }
 }
