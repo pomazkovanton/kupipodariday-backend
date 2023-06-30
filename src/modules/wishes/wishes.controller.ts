@@ -47,12 +47,8 @@ export class WishesController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
-  update(
-    @Param('id') id: number,
-    @Body() dto: UpdateWishDto,
-    @Request() { user },
-  ) {
-    return this.wishesService.update(id, dto, user);
+  update(@Param('id') id: number, @Body() dto: UpdateWishDto) {
+    return this.wishesService.update(id, dto);
   }
 
   @UseGuards(JwtAuthGuard)
