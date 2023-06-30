@@ -41,17 +41,14 @@ export class WishesService {
   async findOne(id: number) {
     const wish = await this.wishRepository.findOne({
       where: { id },
-      relations: ['owner', 'offers'],
+      relations: ['owner', 'offers', 'offers.user'],
     });
-    if (!wish) throw new BadRequestException('Wish not found');
+    if (!wish) throw new BadRequestException('No gift found');
     return wish;
   }
 
-  async update(wishId: number, dto: UpdateWishDto, user) {
+  async update(wishId: number, dto: UpdateWishDto) {
     const wish = await this.findOne(wishId);
-    if (user && wish.owner.id !== user.id) {
-      throw new BadRequestException('No gift found');
-    }
     if (dto.price && wish.offers.length > 0)
       throw new BadRequestException(
         'It is not possible to change the value of the gift',
