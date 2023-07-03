@@ -59,9 +59,14 @@ export class WishesService {
 
   async removeOne(wishId: number, user) {
     const wish = await this.findOne(wishId);
+
     if (user && wish.owner.id !== user.id) {
       throw new BadRequestException('No gift found');
     }
+    if (wish.offers.length > 0)
+      throw new BadRequestException(
+        'You cannot delete a gift for which a donation has been started',
+      );
     await this.wishRepository.delete(wishId);
     return wish;
   }
