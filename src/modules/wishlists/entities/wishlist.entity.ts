@@ -11,7 +11,7 @@ export class Wishlist extends BaseEntity {
   @Length(1, 250)
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   @MaxLength(1500)
   description: string;
 

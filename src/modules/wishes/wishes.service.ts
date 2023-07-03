@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { CreateWishDto } from './dto/create-wish.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -79,6 +79,12 @@ export class WishesService {
     return this.wishRepository.save({
       ...dataWish,
       owner,
+    });
+  }
+
+  findMany(giftsId: number[]) {
+    return this.wishRepository.find({
+      where: { id: In(giftsId) },
     });
   }
 }
