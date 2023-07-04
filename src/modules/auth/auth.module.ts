@@ -9,9 +9,15 @@ import { UsersModule } from '../users/users.module';
 import { jwtOptions } from '../../configs/jwt.config';
 import { STRATEGIES } from './strategies';
 import { GUARDS } from './guards';
+import { HashModule } from '../hash/hash.module';
 
 @Module({
-  imports: [PassportModule, JwtModule.registerAsync(jwtOptions()), UsersModule],
+  imports: [
+    PassportModule,
+    JwtModule.registerAsync(jwtOptions()),
+    UsersModule,
+    HashModule,
+  ],
   controllers: [AuthController],
   providers: [AuthService, ...STRATEGIES, ...GUARDS],
 })

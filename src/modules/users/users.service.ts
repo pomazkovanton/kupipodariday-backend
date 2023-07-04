@@ -1,22 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, Repository } from 'typeorm';
-import { genSaltSync, hashSync } from 'bcrypt';
 
 import { CreateUserDto } from './dto/create-users.dto';
 import { User } from './entities/user.entity';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { FindUserDto } from './dto/find-user.dto';
+import { HashService } from '../hash/hash.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly hashService: HashService,
   ) {}
-
-  private hashPassword(password: string) {
-    return hashSync(password, genSaltSync(10));
-  }
 
   private async existUser(username: string, email: string) {
     const existUsername = await this.userRepository.findOne({
@@ -42,7 +39,7 @@ export class UsersService {
       about: dto.about,
       avatar: dto.avatar,
       email: dto.email,
-      password: this.hashPassword(dto.password),
+      password: this.hashService.getHash(dto.password),
     });
     return user;
   }
@@ -77,7 +74,7 @@ export class UsersService {
         );
     }
     if (dto.password) {
-      dto.password = this.hashPassword(dto.password);
+      dto.password = this.hashService.getHash(dto.password);
     }
 
     await this.userRepository.update(id, dto);
