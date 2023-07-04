@@ -1,4 +1,4 @@
-import { IsString, Length } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class FindUserDto {
   @IsString()
