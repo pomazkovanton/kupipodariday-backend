@@ -1,8 +1,8 @@
 {
   "name": "kupipodariday-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "КупиПодариДай - API для сервиса вишлистов написанный на фреймворки Nestjs",
+  "author": "Антон Помазков",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
