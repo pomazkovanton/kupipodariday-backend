@@ -32,7 +32,7 @@ export class WishesService {
 
   findTop() {
     return this.wishRepository.find({
-      take: 20,
+      take: 10,
       order: { copied: 'desc' },
       relations: ['owner', 'offers'],
     });
