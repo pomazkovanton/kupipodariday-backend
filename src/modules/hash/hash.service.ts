@@ -3,11 +3,11 @@ import { hashSync, genSaltSync, compareSync } from 'bcrypt';
 
 @Injectable()
 export class HashService {
-  getHash(password: string) {
+  getHash(password: string): string {
     return hashSync(password, genSaltSync(10));
   }
 
-  compare(password, hash) {
+  compare(password: string, hash: string): boolean {
     return compareSync(password, hash);
   }
 }

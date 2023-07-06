@@ -7,6 +7,8 @@ import { User } from './entities/user.entity';
 import { UpdateUsersDto } from './dto/update-users.dto';
 import { FindUserDto } from './dto/find-user.dto';
 import { HashService } from '../hash/hash.service';
+import { TUser } from 'src/common/types';
+import { Wish } from '../wishes/entities/wish.entity';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +17,7 @@ export class UsersService {
     private readonly hashService: HashService,
   ) {}
 
-  private async existUser(username: string, email: string) {
+  private async existUser(username: string, email: string): Promise<boolean> {
     const existUsername = await this.userRepository.findOne({
       where: { username },
     });
@@ -26,7 +28,7 @@ export class UsersService {
     return false;
   }
 
-  async save(dto: CreateUserDto) {
+  async save(dto: CreateUserDto): Promise<TUser> {
     const existUser = await this.existUser(dto.username, dto.email);
 
     if (existUser)
@@ -44,20 +46,20 @@ export class UsersService {
     return user;
   }
 
-  async findOne(searchIndex: string) {
+  async findOne(searchIndex: string): Promise<TUser> {
     return this.userRepository.findOne({
       where: [{ email: searchIndex }, { username: searchIndex }],
     });
   }
 
-  async findOneById(id: number) {
+  async findOneById(id: number): Promise<TUser> {
     const { password, ...user } = await this.userRepository.findOne({
       where: { id },
     });
     return user;
   }
 
-  async update(id: number, dto: UpdateUsersDto) {
+  async update(id: number, dto: UpdateUsersDto): Promise<TUser> {
     const user = await this.findOneById(id);
     if (dto.username && dto.username !== user.username) {
       const isUsernameExist = await this.findOne(dto.username);
@@ -81,7 +83,7 @@ export class UsersService {
     return this.findOneById(id);
   }
 
-  async getWishes(username: string) {
+  async getWishes(username: string): Promise<Wish[]> {
     const user = await this.findOne(username);
     if (!user) throw new BadRequestException('User not found');
     const { wishes } = await this.userRepository.findOne({
@@ -92,7 +94,7 @@ export class UsersService {
     return wishes;
   }
 
-  find(dto: FindUserDto) {
+  find(dto: FindUserDto): Promise<TUser[]> {
     return this.userRepository.find({
       where: [
         { username: Like(`%${dto.query}%`) },

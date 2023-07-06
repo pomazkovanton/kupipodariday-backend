@@ -17,20 +17,20 @@ export class WishlistsService {
     private readonly wishesService: WishesService,
   ) {}
 
-  findAll() {
+  findAll(): Promise<Wishlist[]> {
     return this.wishlistRepository.find({
       relations: ['owner', 'items'],
     });
   }
 
-  async create(dto: CreateWishlistDto, userId: number) {
+  async create(dto: CreateWishlistDto, userId: number): Promise<Wishlist> {
     const user = await this.usersService.findOneById(userId);
     const wishes = await this.wishesService.findMany(dto.itemsId);
 
     return this.wishlistRepository.save({ ...dto, owner: user, items: wishes });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Wishlist> {
     const wishlist = await this.wishlistRepository.findOne({
       where: { id },
       relations: ['owner', 'items'],
@@ -41,7 +41,7 @@ export class WishlistsService {
     return wishlist;
   }
 
-  async update(id: number, dto: UpdateWishlistDto, userId) {
+  async update(id: number, dto: UpdateWishlistDto, userId): Promise<Wishlist> {
     const wishlist = await this.findOne(id);
 
     if (wishlist.owner.id !== userId) {
@@ -62,7 +62,7 @@ export class WishlistsService {
     return wishlist;
   }
 
-  async removeOne(id: number, userId: number) {
+  async removeOne(id: number, userId: number): Promise<Wishlist> {
     const wishlist = await this.findOne(id);
     if (wishlist.owner.id !== userId) {
       throw new BadRequestException(

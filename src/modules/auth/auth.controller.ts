@@ -11,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { TToken, TUser } from 'src/common/types';
 
 @Controller()
 export class AuthController {
@@ -18,13 +19,13 @@ export class AuthController {
 
   @Post('signup')
   @UsePipes(new ValidationPipe())
-  signup(@Body() dto: SignUpDto) {
+  signup(@Body() dto: SignUpDto): Promise<TUser> {
     return this.authService.signup(dto);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  signin(@Request() req) {
+  signin(@Request() req: { user: TUser }): Promise<TToken> {
     return this.authService.signin(req.user);
   }
 }

@@ -14,7 +14,7 @@ export class WishesService {
     private readonly userService: UsersService,
   ) {}
 
-  async create(id: number, dto: CreateWishDto) {
+  async create(id: number, dto: CreateWishDto): Promise<Wish> {
     const user = await this.userService.findOneById(id);
     return this.wishRepository.save({
       ...dto,
@@ -22,7 +22,7 @@ export class WishesService {
     });
   }
 
-  findLast() {
+  findLast(): Promise<Wish[]> {
     return this.wishRepository.find({
       order: { createdAt: 'DESC' },
       take: 40,
@@ -30,7 +30,7 @@ export class WishesService {
     });
   }
 
-  findTop() {
+  findTop(): Promise<Wish[]> {
     return this.wishRepository.find({
       take: 10,
       order: { copied: 'desc' },
@@ -38,7 +38,7 @@ export class WishesService {
     });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Wish> {
     const wish = await this.wishRepository.findOne({
       where: { id },
       relations: ['owner', 'offers', 'offers.user'],
@@ -47,7 +47,7 @@ export class WishesService {
     return wish;
   }
 
-  async update(wishId: number, dto: UpdateWishDto) {
+  async update(wishId: number, dto: UpdateWishDto): Promise<Wish> {
     const wish = await this.findOne(wishId);
     if (dto.price && wish.offers.length > 0)
       throw new BadRequestException(
@@ -57,7 +57,7 @@ export class WishesService {
     return this.findOne(wishId);
   }
 
-  async removeOne(wishId: number, user) {
+  async removeOne(wishId: number, user): Promise<Wish> {
     const wish = await this.findOne(wishId);
 
     if (user && wish.owner.id !== user.id) {
@@ -71,7 +71,7 @@ export class WishesService {
     return wish;
   }
 
-  async copy(wishId: number, user) {
+  async copy(wishId: number, user): Promise<Wish> {
     const { id, createdAt, updatedAt, copied, raised, offers, ...dataWish } =
       await this.findOne(wishId);
     const owner = await this.userService.findOneById(user.id);
@@ -82,7 +82,7 @@ export class WishesService {
     });
   }
 
-  findMany(giftsId: number[]) {
+  findMany(giftsId: number[]): Promise<Wish[]> {
     return this.wishRepository.find({
       where: { id: In(giftsId) },
     });

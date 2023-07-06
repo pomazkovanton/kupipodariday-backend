@@ -17,7 +17,7 @@ export class OffersService {
     private readonly wishesService: WishesService,
   ) {}
 
-  async create(dto: CreateOfferDto, userId) {
+  async create(dto: CreateOfferDto, userId): Promise<Offer> {
     const user = await this.usersService.findOneById(userId);
     const wish = await this.wishesService.findOne(dto.itemId);
     const donation = Number(wish.raised) + dto.amount;
@@ -41,7 +41,7 @@ export class OffersService {
     return this.offerRepository.save({ ...dto, user, item: wish });
   }
 
-  async findAll() {
+  async findAll(): Promise<Offer[]> {
     const offers = await this.offerRepository.find({
       relations: ['user', 'item'],
     });
@@ -50,7 +50,7 @@ export class OffersService {
     return offers;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Offer> {
     return this.offerRepository.findOne({ where: { id } });
   }
 }
