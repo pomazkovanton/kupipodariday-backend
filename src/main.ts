@@ -10,7 +10,13 @@ async function bootstrap() {
   const port = configService.get('port') || 3000;
   app.enableCors();
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      skipMissingProperties: true,
+    }),
+  );
   await app.listen(port);
 }
 bootstrap();

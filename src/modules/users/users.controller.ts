@@ -2,8 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  UsePipes,
-  ValidationPipe,
   Request,
   UseGuards,
   Get,
@@ -30,7 +28,6 @@ export class UsersController {
   }
 
   @Patch('me')
-  @UsePipes(new ValidationPipe({ skipMissingProperties: true }))
   update(
     @Request() { user }: TUserRequest,
     @Body() dto: UpdateUsersDto,

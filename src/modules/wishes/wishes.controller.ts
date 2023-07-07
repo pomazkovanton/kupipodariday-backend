@@ -3,8 +3,6 @@ import {
   Post,
   Body,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
   Request,
   Get,
   Param,
@@ -25,7 +23,6 @@ export class WishesController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  @UsePipes(new ValidationPipe())
   create(
     @Request() { user }: TUserRequest,
     @Body() dto: CreateWishDto,
@@ -51,7 +48,6 @@ export class WishesController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  @UsePipes(new ValidationPipe())
   update(@Param('id') id: number, @Body() dto: UpdateWishDto): Promise<Wish> {
     return this.wishesService.update(id, dto);
   }
