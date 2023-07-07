@@ -46,7 +46,7 @@ export class UsersService {
     return user;
   }
 
-  async findOne(searchIndex: string): Promise<TUser> {
+  async findOne(searchIndex: string): Promise<User> {
     return this.userRepository.findOne({
       where: [{ email: searchIndex }, { username: searchIndex }],
     });
